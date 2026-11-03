@@ -1,2 +1,17 @@
 # special-octo-spork
-A Verilog-based shared resource arbiter implementing fixed-priority and round-robin arbitration. Includes RTL design, testbenches, and waveform simulations to verify request handling, grant logic, fairness, and starvation prevention.
+Question 2:
+Version 1:
+When both requests arrive simultaneously, A always gets priority. B has to wait.
+req_A   req_B   grant_A   grant_B    
+  1       1       1         0         
+  1       1       1         0
+  1       1       1         0
+  1       1       1         0
+
+Version 2:
+When both requests arrive simultaneously, pririty alternates between A and B.
+req_A   req_B   grant_A   grant_B
+  1       1       1         0
+  1       1       0         1
+  1       1       1         0
+  1       1       0         1  
