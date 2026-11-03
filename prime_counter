@@ -1,0 +1,114 @@
+module prime_counter(
+    input clk,
+    input rst,
+    input start,
+    input stop,
+    output reg [1:0] state,
+    output reg [3:0] count
+);
+
+    parameter IDLE   = 2'b00;
+    parameter ACTIVE = 2'b01;
+    parameter DONE   = 2'b10;
+
+    reg [1:0] next_state;
+
+    integer i;
+    integer candidate;
+    reg found;
+
+
+    // Function to check whether a number is prime
+    function is_prime;
+        input [4:0] n;
+        integer j;
+
+        begin
+            if (n < 2)
+                is_prime = 0;
+
+            else begin
+                is_prime = 1;
+
+                for (j = 2; j < n; j = j + 1) begin
+                    if (n % j == 0)
+                        is_prime = 0;
+                end
+            end
+        end
+    endfunction
+
+
+    // 1. State register
+    always @(posedge clk) begin
+        if (rst)
+            state <= IDLE;
+        else
+            state <= next_state;
+    end
+
+
+    // 2. Next-state logic
+    always @(*) begin
+
+        case (state)
+
+            IDLE: begin
+                if (start)
+                    next_state = ACTIVE;
+                else
+                    next_state = IDLE;
+            end
+
+            ACTIVE: begin
+                if (stop)
+                    next_state = DONE;
+                else
+                    next_state = ACTIVE;
+            end
+
+            DONE:
+                next_state = IDLE;
+
+            default:
+                next_state = IDLE;
+
+        endcase
+
+    end
+
+
+    // 3. Counter block
+    always @(posedge clk) begin
+
+        if (rst)
+            count <= 0;
+
+        else if (state == IDLE && start)
+            count <= 2;
+
+        else if (state == ACTIVE && !stop) begin
+
+            count <= 2;
+            found = 0;
+
+            for (i = 1; i <= 14; i = i + 1) begin
+
+                candidate = count + i;
+
+                // Wrap around after 13
+                if (candidate > 13)
+                    candidate = candidate - 14;
+
+                if (!found && is_prime(candidate)) begin
+                    count <= candidate;
+                    found = 1;
+                end
+
+            end
+
+        end
+
+    end
+
+endmodule
