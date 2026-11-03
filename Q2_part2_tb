@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module tb_teensor_2;
+module tb_tensor_2;
 
     reg clk, rst;
     reg req_A, req_B;
@@ -13,7 +13,7 @@ module tb_teensor_2;
     integer i;
     integer count_A, count_B;
 
-    teensor_2 uut (
+    tensor_2 uut (
         .clk(clk),
         .rst(rst),
         .req_A(req_A),
