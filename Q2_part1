@@ -1,4 +1,4 @@
-module teensor_2(
+module tensor_2(
     input clk,
     input rst,
     input req_A,
